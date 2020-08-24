@@ -489,8 +489,8 @@ header .go-back i {
 }
 
 .index-card {
-    margin-top: -50px;
-    padding-top: 20px;
+    /* margin-top: -50px;
+    padding-top: 20px; */
 }
 
 .carousel-post .title {
@@ -536,7 +536,7 @@ header .go-back i {
 }
 
 .index-card .card .card-content {
-    padding: 20px 40px;
+    /* padding: 20px 40px; */
 }
 
 @media only screen and (min-width: 1418px) {
@@ -548,14 +548,14 @@ header .go-back i {
 
 @media only screen and (max-width: 601px) {
     .index-card .card .card-content {
-        padding: 10px 10px;
+        /* padding: 10px 10px; */
     }
 }
 
 /*中等屏幕下(平板类)的样式*/
 @media only screen and (min-width: 600px) and (max-width: 992px) {
     .index-card .card .card-content {
-        padding: 20px 20px;
+        /* padding: 20px 20px; */
     }
 }
 
