@@ -4,8 +4,13 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="关于HDFS的几个问题, PL">
-    <meta name="description" content="1. 关于向hdfs写数据时,假设复制因子为3,向3个节点写数据完成时,是同时发送ack,还是写完一个就发送?答:每个DataNode写完一个块后，会返回确认信息。实际上，hdfs write的时候只需要把数据写到缓冲区就可以返回进行下一条">
+    <meta name="keywords" content="Spark中宽依赖和窄依赖, PL">
+    <meta name="description" content="窄依赖df.filter($&#34;col&#34; =!= lit(&#34;value&#34;))
+// map union 等算子
+filter Rdd 分区 map 模拟
+(k1,v1) =&gt; (k1,v1)
+(k2,v2) =&gt; (k2,v2)
+(k3,v3">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +18,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>关于HDFS的几个问题 | PL</title>
+    <title>Spark中宽依赖和窄依赖 | PL</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +265,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        关于HDFS的几个问题
+                        Spark中宽依赖和窄依赖
                     </div>
                 </div>
             </div>
@@ -377,23 +382,14 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Hadoop/" target="_blank">
-                                <span class="chip bg-color">Hadoop</span>
+                            <a href="/tags/Spark/" target="_blank">
+                                <span class="chip bg-color">Spark</span>
                             </a>
                         
                     </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fa fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/大数据/" class="post-category" target="_blank">
-                                大数据
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -417,9 +413,22 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-关于向hdfs写数据时-假设复制因子为3-向3个节点写数据完成时-是同时发送ack-还是写完一个就发送"><a href="#1-关于向hdfs写数据时-假设复制因子为3-向3个节点写数据完成时-是同时发送ack-还是写完一个就发送" class="headerlink" title="1. 关于向hdfs写数据时,假设复制因子为3,向3个节点写数据完成时,是同时发送ack,还是写完一个就发送?"></a>1. 关于向hdfs写数据时,假设复制因子为3,向3个节点写数据完成时,是同时发送ack,还是写完一个就发送?</h2><p>答:每个DataNode写完一个块后，会返回确认信息。实际上，hdfs write的时候只需要把数据写到缓冲区就可以返回进行下一条写操作了，连写成功第一个节点都不必要，真正计算起来基本上就是 数据大小/网络带宽 + 3 * 网络传输时延了。</p>
-<h2 id="2-为什么不同时向3个DataNode-发送数据"><a href="#2-为什么不同时向3个DataNode-发送数据" class="headerlink" title="2. 为什么不同时向3个DataNode 发送数据?"></a>2. 为什么不同时向3个DataNode 发送数据?</h2><p>答:网络带宽问题</p>
-<h2 id="3-怎么确定数据节点的远近-怎么得到最近的节点了"><a href="#3-怎么确定数据节点的远近-怎么得到最近的节点了" class="headerlink" title="3. 怎么确定数据节点的远近?怎么得到最近的节点了?"></a>3. 怎么确定数据节点的远近?怎么得到最近的节点了?</h2><p>答:节点距离：两个节点到达最近的共同祖先的距离总和<br>在本地网络中，两个节点被称为”彼此近邻”,在海量数据处理中，其主要限制因素是节点之间数据的传输效率——带宽很稀缺。<br>网路拓扑: 根节点为 “<strong>/</strong>“,其子节点为交换机,再其子节点为机架,机架的子节点就是DataNode机器了,知道其信息,就可以算出节点间的距离了。</p>
+                <h2 id="窄依赖"><a href="#窄依赖" class="headerlink" title="窄依赖"></a>窄依赖</h2><pre class=" language-scala"><code class="language-scala">df<span class="token punctuation">.</span>filter<span class="token punctuation">(</span>$<span class="token string">"col"</span> <span class="token operator">=</span><span class="token operator">!=</span> lit<span class="token punctuation">(</span><span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">// map union 等算子</span>
+filter Rdd 分区 map 模拟
+<span class="token punctuation">(</span>k1<span class="token punctuation">,</span>v1<span class="token punctuation">)</span> <span class="token keyword">=></span> <span class="token punctuation">(</span>k1<span class="token punctuation">,</span>v1<span class="token punctuation">)</span>
+<span class="token punctuation">(</span>k2<span class="token punctuation">,</span>v2<span class="token punctuation">)</span> <span class="token keyword">=></span> <span class="token punctuation">(</span>k2<span class="token punctuation">,</span>v2<span class="token punctuation">)</span>
+<span class="token punctuation">(</span>k3<span class="token punctuation">,</span>v3<span class="token punctuation">)</span> <span class="token keyword">=></span> <span class="token punctuation">(</span>k3<span class="token punctuation">,</span>v3<span class="token punctuation">)</span></code></pre>
+<p>map和filter算子中，对于父RDD来说，一个分区内的数据，<strong>有且仅有一个</strong>子RDD的分区来消费该数据,<br>故判断窄依赖的依据: 父类分区内的数据，会被子类RDD中的指定的唯一一个分区所消费</p>
+<h2 id="宽依赖"><a href="#宽依赖" class="headerlink" title="宽依赖"></a>宽依赖</h2><p>只要是shuffle,一定会产生宽依赖;<br>宽依赖，指的是父类一个分区内的数据，会被子RDD内的<strong>多个分区</strong>消费，需要自行判断分区，来实现数据发送的效果.</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li><p>每个分区内的数据，是否能够指定自己在子类RDD中的分区？<br>答:如果不能，那就是宽依赖：如果父RDD和子RDD分区数目一致，那基本就是窄依赖了</p>
+</li>
+<li><p>为什么hadoop没有窄依赖?<br>答:map于reduce之间都需要shuffle</p>
+</li>
+<li><p>判断宽窄依赖的根据到底是什么?<br>答: RDD产生的数据流向;父RDD中的一个Partition对子RDD进行数据分发,则为宽依赖,否则称之为窄依赖。即使父RDD的分区只有一条数据，它也走了数据分发的逻辑，只不过按照流程走了一遍，但这无法改变它开启了数据分发的事实。</p>
+</li>
+</ol>
 
             </div>
             <hr/>
@@ -457,9 +466,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/09/21/spark-zhong-kuan-yi-lai-he-zhai-yi-lai/">
                     <div class="card-image">
@@ -477,9 +487,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-user fa-fw"></i>
@@ -488,6 +498,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -506,19 +517,19 @@
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/21/spark-cheng-xu-zhi-xing-liu-cheng/">
+                <a href="/2020/09/21/guan-yu-hdfs-de-ji-ge-wen-ti/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="Spark程序执行流程">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="关于HDFS的几个问题">
                         
-                        <span class="card-title">Spark程序执行流程</span>
+                        <span class="card-title">关于HDFS的几个问题</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Spark程序被提交后是如何执行的了?
+                            1. 关于向hdfs写数据时,假设复制因子为3,向3个节点写数据完成时,是同时发送ack,还是写完一个就发送?答:每个DataNode写完一个块后，会返回确认信息。实际上，hdfs write的时候只需要把数据写到缓冲区就可以返回进行下一条
                         
                     </div>
                     <div class="publish-info">
@@ -540,8 +551,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Spark/" target="_blank">
-                        <span class="chip bg-color">Spark</span>
+                    <a href="/tags/Hadoop/" target="_blank">
+                        <span class="chip bg-color">Hadoop</span>
                     </a>
                     
                 </div>
