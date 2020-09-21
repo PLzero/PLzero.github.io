@@ -4,9 +4,11 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Hadoop的HA, PL">
-    <meta name="description" content="HA介绍
-Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处于 Active 状态，为主 NameNode，另外一台处于 Standby 状态，为备 NameNode，只有主 Na">
+    <meta name="keywords" content="Spark程序执行流程, PL">
+    <meta name="description" content="执行流程
+当 Driver 进程被启动之后,首先它将发送请求到Master节点上,进行Spark应用程序的注册
+Master在接受到Spark应用程序的注册申请之后,会发送给Worker,让其进行资源的调度和分配.
+Worker 在接受Ma">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -14,7 +16,7 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Hadoop的HA | PL</title>
+    <title>Spark程序执行流程 | PL</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -261,13 +263,13 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Hadoop的HA
+                        Spark程序执行流程
                     </div>
                 </div>
             </div>
@@ -378,8 +380,8 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Hadoop/" target="_blank">
-                                <span class="chip bg-color">Hadoop</span>
+                            <a href="/tags/Spark/" target="_blank">
+                                <span class="chip bg-color">Spark</span>
                             </a>
                         
                     </div>
@@ -418,12 +420,15 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="HA介绍"><a href="#HA介绍" class="headerlink" title="HA介绍"></a>HA介绍</h2><ul>
-<li><strong>Active NameNode</strong> 和 <strong>Standby NameNode</strong>：两台 NameNode 形成互备，一台处于 Active 状态，为主 NameNode，另外一台处于 Standby 状态，为备 NameNode，只有主 NameNode 才能对外提供读写服务；</li>
-<li><strong>ZKFailoverController</strong>（主备切换控制器，FC）：ZKFailoverController 作为独立的进程运行，对 NameNode 的主备切换进行总体控制。ZKFailoverController 能及时检测到 NameNode 的健康状况，在主 NameNode 故障时借助 Zookeeper 实现自动的主备选举和切换（当然 NameNode 目前也支持不依赖于 Zookeeper 的手动主备切换）；<br>Zookeeper 集群：为主备切换控制器提供主备选举支持；</li>
-<li><strong>共享存储系统</strong>：共享存储系统是实现 NameNode 的高可用最为关键的部分，共享存储系统保存了 NameNode 在运行过程中所产生的 HDFS 的元数据。主 NameNode 和备 NameNode 通过共享存储系统实现元数据同步。在进行主备切换的时候，新的主 NameNode 在确认元数据完全同步之后才能继续对外提供服务。</li>
-<li><strong>DataNode 节点</strong>：因为主 NameNode 和备 NameNode 需要共享 HDFS 的数据块和 DataNode 之间的映射关系，为了使故障切换能够快速进行，DataNode 会同时向主 NameNode 和备 NameNode 上报数据块的位置信息。</li>
-</ul>
+                <h2 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h2><ol>
+<li>当 Driver 进程被启动之后,首先它将发送请求到Master节点上,进行Spark应用程序的注册</li>
+<li>Master在接受到Spark应用程序的注册申请之后,会发送给Worker,让其进行资源的调度和分配.</li>
+<li>Worker 在接受Master的请求之后,会为Spark应用程序启动Executor, 来分配资源</li>
+<li>Executor启动分配资源好后,就会想Driver进行反注册,这是Driver已经知道哪些Executor为他服务了</li>
+<li>当Driver得到注册了Executor之后,就可以开始正式执行spark应用程序了. 首先第一步,就是创建初始RDD,读取数据源,再执行之后的一系列算子. HDFS文件内容被读取到多个worker节点上,形成内存中的分布式数据集,也就是初始RDD</li>
+<li>Driver就会根据 Job 任务任务中的算子形成对应的task,最后提交给 Executor, 来分配给task进行计算的线程</li>
+<li>task就会去调用对应的任务数据来计算,并task会对调用过来的RDD的partition数据执行指定的算子操作,形成新的RDD的partition,这时一个大的循环就结束了<br>后续的RDD的partition数据又通过Driver形成新的一批task提交给Executor执行,循环这个操作,直到所有的算子结束</li>
+</ol>
 
             </div>
             <hr/>
@@ -461,9 +466,10 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/09/21/spark-cheng-xu-zhi-xing-liu-cheng/">
                     <div class="card-image">
@@ -481,9 +487,9 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -496,6 +502,7 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -514,19 +521,20 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/21/mapreduce-jian-jie/">
+                <a href="/2020/09/21/hadoop-de-ha/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="MapReduce简介">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Hadoop的HA">
                         
-                        <span class="card-title">MapReduce简介</span>
+                        <span class="card-title">Hadoop的HA</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            概述Hadoop MapReduce 是一个分布式计算框架，用于编写批处理应用程序。编写好的程序可以提交到 Hadoop 集群上用于并行处理大规模的数据集。MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 map 以并行的
+                            HA介绍
+Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处于 Active 状态，为主 NameNode，另外一台处于 Standby 状态，为备 NameNode，只有主 Na
                         
                     </div>
                     <div class="publish-info">
