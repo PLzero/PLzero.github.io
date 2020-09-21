@@ -483,7 +483,7 @@ Worker 在接受Ma">
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 关于向hdfs写数据时,假设复制因子为3,向3个节点写数据完成时,是同时发送ack,还是写完一个就发送?答:每个DataNode写完一个块后，会返回确认信息。实际上，hdfs write的时候只需要把数据写到缓冲区就可以返回进行下一条
+                            拓展向HDFS写数据会遇到的几个问题
                         
                     </div>
                     <div class="publish-info">
@@ -532,8 +532,7 @@ Worker 在接受Ma">
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            HA介绍
-Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处于 Active 状态，为主 NameNode，另外一台处于 Standby 状态，为备 NameNode，只有主 Na
+                            介绍一下Hadoop的HA
                         
                     </div>
                     <div class="publish-info">

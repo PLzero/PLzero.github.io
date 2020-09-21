@@ -468,7 +468,7 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                         <div class="card-content article-content">
                             <div class="summary block-with-text">
                                 
-                                    1. 关于向hdfs写数据时,假设复制因子为3,向3个节点写数据完成时,是同时发送ack,还是写完一个就发送?答:每个DataNode写完一个块后，会返回确认信息。实际上，hdfs write的时候只需要把数据写到缓冲区就可以返回进行下一条
+                                    拓展向HDFS写数据会遇到的几个问题
                                 
                             </div>
                             <div class="publish-info">
@@ -586,8 +586,7 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                         <div class="card-content article-content">
                             <div class="summary block-with-text">
                                 
-                                    HA介绍
-Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处于 Active 状态，为主 NameNode，另外一台处于 Standby 状态，为备 NameNode，只有主 Na
+                                    介绍一下Hadoop的HA
                                 
                             </div>
                             <div class="publish-info">
@@ -646,7 +645,7 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                         <div class="card-content article-content">
                             <div class="summary block-with-text">
                                 
-                                    概述Hadoop MapReduce 是一个分布式计算框架，用于编写批处理应用程序。编写好的程序可以提交到 Hadoop 集群上用于并行处理大规模的数据集。MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 map 以并行的
+                                    有关于MapReduce简介
                                 
                             </div>
                             <div class="publish-info">
@@ -705,8 +704,7 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                         <div class="card-content article-content">
                             <div class="summary block-with-text">
                                 
-                                    介绍HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。
-HDFS 架构设计及原理HDFS 架构HDFS 遵循主/从架构，由单
+                                    有关于HDFS分布式文件系统的介绍
                                 
                             </div>
                             <div class="publish-info">
