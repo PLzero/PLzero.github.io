@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>MapReduce简介</title>
+      <link href="/2020/09/21/mapreduce-jian-jie/"/>
+      <url>/2020/09/21/mapreduce-jian-jie/</url>
+      
+        <content type="html"><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Hadoop MapReduce 是一个分布式计算框架，用于编写批处理应用程序。编写好的程序可以提交到 Hadoop 集群上用于并行处理大规模的数据集。<br>MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 map 以并行的方式处理，框架对 map 的输出进行排序，然后输入到 reduce 中。</p><h2 id="编程模型简述"><a href="#编程模型简述" class="headerlink" title="编程模型简述"></a>编程模型简述</h2><ul><li><strong>Map阶段</strong>: <ul><li><strong>input</strong>: 读取文件</li><li><strong>split</strong>: 将文件按照行进行拆分，每个输入分片（input split）针对一个map任务</li><li><strong>map</strong>: 就是程序员编写好的map函数了，因此map函数效率相对好控制，而且一般map操作都是本地化操作也就是在数据存储节点上进行</li><li><strong>shuffle</strong>: <ul><li><strong>partition</strong>: 需要计算每一个map的结果需要发到哪个reduce端,partition数等于reducer数.默认采用HashPartition</li><li><strong>spill</strong>: 此阶段分为sort和combine.首先分区过得数据会经过排序之后写入环形内存缓冲区.在达到阈值之后守护线程将数据溢出分区文件</li><li><strong>merge</strong>: spill结果会有很多个文件,但最终输出只有一个,故有一个merge操作会合并所有的本地文件,并且该文件会有一个对应的索引文件</li></ul></li></ul></li><li><strong>Reduce阶段</strong>: <ul><li><strong>copy</strong>: 拉取数据,reduce启动数据copy线程(默认5个),通过Http请求对应节点的map task输出文件,copy的数据也会先放到内部缓冲区.之后再溢写,类似map端操作</li><li><strong>marge</strong>: 合并多个copy的多个map端的数据.在一个reduce端先将多个map端的数据溢写到本地磁盘,之后再将多个文件合并成一个文件</li><li><strong>output</strong>: merge阶段最后会生成一个文件,将此文件转移到内存中,shuffle阶段结束</li><li><strong>reduce</strong>: 开始执行reduce任务,输出</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 大数据 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hadoop </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>HDFS分布式文件系统</title>
       <link href="/2020/09/21/hdfs-fen-bu-shi-wen-jian-xi-tong/"/>
       <url>/2020/09/21/hdfs-fen-bu-shi-wen-jian-xi-tong/</url>
