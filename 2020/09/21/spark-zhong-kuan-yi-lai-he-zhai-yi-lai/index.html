@@ -391,6 +391,15 @@ filter Rdd 分区 map 模拟
                 </div>
                 <div class="col s5 right-align">
                     
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/大数据/" class="post-category" target="_blank">
+                                大数据
+                            </a>
+                        
+                    </div>
+                    
                 </div>
             </div>
 
@@ -420,7 +429,8 @@ filter Rdd 分区 map 模拟
 <span class="token punctuation">(</span>k2<span class="token punctuation">,</span>v2<span class="token punctuation">)</span> <span class="token keyword">=></span> <span class="token punctuation">(</span>k2<span class="token punctuation">,</span>v2<span class="token punctuation">)</span>
 <span class="token punctuation">(</span>k3<span class="token punctuation">,</span>v3<span class="token punctuation">)</span> <span class="token keyword">=></span> <span class="token punctuation">(</span>k3<span class="token punctuation">,</span>v3<span class="token punctuation">)</span></code></pre>
 <p>map和filter算子中，对于父RDD来说，一个分区内的数据，<strong>有且仅有一个</strong>子RDD的分区来消费该数据,<br>故判断窄依赖的依据: 父类分区内的数据，会被子类RDD中的指定的唯一一个分区所消费</p>
-<h2 id="宽依赖"><a href="#宽依赖" class="headerlink" title="宽依赖"></a>宽依赖</h2><p>只要是shuffle,一定会产生宽依赖;<br>宽依赖，指的是父类一个分区内的数据，会被子RDD内的<strong>多个分区</strong>消费，需要自行判断分区，来实现数据发送的效果.</p>
+<h2 id="宽依赖"><a href="#宽依赖" class="headerlink" title="宽依赖"></a>宽依赖</h2><pre class=" language-scala"><code class="language-scala">df<span class="token punctuation">.</span>groupBy<span class="token punctuation">(</span><span class="token string">"col1"</span><span class="token punctuation">,</span><span class="token string">"col2"</span><span class="token punctuation">)</span></code></pre>
+<p>只要是shuffle,一定会产生宽依赖;<br>宽依赖，指的是父类一个分区内的数据，会被子RDD内的<strong>多个分区</strong>消费，需要自行判断分区，来实现数据发送的效果.</p>
 <h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
 <li><p>每个分区内的数据，是否能够指定自己在子类RDD中的分区？<br>答:如果不能，那就是宽依赖：如果父RDD和子RDD分区数目一致，那基本就是窄依赖了</p>
 </li>
@@ -492,8 +502,12 @@ filter Rdd 分区 map 模拟
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fa fa-user fa-fw"></i>
-                            PC
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/大数据/" class="post-category" target="_blank">
+                                    大数据
+                                </a>
+                            
                             
                         </span>
                     </div>
