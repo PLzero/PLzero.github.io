@@ -4,8 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="MapReduce简介, PL">
-    <meta name="description" content="概述Hadoop MapReduce 是一个分布式计算框架，用于编写批处理应用程序。编写好的程序可以提交到 Hadoop 集群上用于并行处理大规模的数据集。MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 map 以并行的">
+    <meta name="keywords" content="Hadoop的HA, PL">
+    <meta name="description" content="HA介绍
+Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处于 Active 状态，为主 NameNode，另外一台处于 Standby 状态，为备 NameNode，只有主 Na">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>MapReduce简介 | PL</title>
+    <title>Hadoop的HA | PL</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +261,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        MapReduce简介
+                        Hadoop的HA
                     </div>
                 </div>
             </div>
@@ -417,27 +418,11 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Hadoop MapReduce 是一个分布式计算框架，用于编写批处理应用程序。编写好的程序可以提交到 Hadoop 集群上用于并行处理大规模的数据集。<br>MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 map 以并行的方式处理，框架对 map 的输出进行排序，然后输入到 reduce 中。</p>
-<h2 id="编程模型简述"><a href="#编程模型简述" class="headerlink" title="编程模型简述"></a>编程模型简述</h2><ul>
-<li><strong>Map阶段</strong>: <ul>
-<li><strong>input</strong>: 读取文件</li>
-<li><strong>split</strong>: 将文件按照行进行拆分，每个输入分片（input split）针对一个map任务</li>
-<li><strong>map</strong>: 就是程序员编写好的map函数了，因此map函数效率相对好控制，而且一般map操作都是本地化操作也就是在数据存储节点上进行</li>
-<li><strong>shuffle</strong>: <ul>
-<li><strong>partition</strong>: 需要计算每一个map的结果需要发到哪个reduce端,partition数等于reducer数.默认采用HashPartition</li>
-<li><strong>spill</strong>: 此阶段分为sort和combine.首先分区过得数据会经过排序之后写入环形内存缓冲区.在达到阈值之后守护线程将数据溢出分区文件</li>
-<li><strong>merge</strong>: spill结果会有很多个文件,但最终输出只有一个,故有一个merge操作会合并所有的本地文件,并且该文件会有一个对应的索引文件</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>Reduce阶段</strong>: <ul>
-<li><strong>copy</strong>: 拉取数据,reduce启动数据copy线程(默认5个),通过Http请求对应节点的map task输出文件,copy的数据也会先放到内部缓冲区.之后再溢写,类似map端操作</li>
-<li><strong>marge</strong>: 合并多个copy的多个map端的数据.在一个reduce端先将多个map端的数据溢写到本地磁盘,之后再将多个文件合并成一个文件</li>
-<li><strong>output</strong>: merge阶段最后会生成一个文件,将此文件转移到内存中,shuffle阶段结束</li>
-<li><strong>reduce</strong>: 开始执行reduce任务,输出</li>
-</ul>
-</li>
+                <h2 id="HA介绍"><a href="#HA介绍" class="headerlink" title="HA介绍"></a>HA介绍</h2><ul>
+<li><strong>Active NameNode</strong> 和 <strong>Standby NameNode</strong>：两台 NameNode 形成互备，一台处于 Active 状态，为主 NameNode，另外一台处于 Standby 状态，为备 NameNode，只有主 NameNode 才能对外提供读写服务；</li>
+<li><strong>ZKFailoverController</strong>（主备切换控制器，FC）：ZKFailoverController 作为独立的进程运行，对 NameNode 的主备切换进行总体控制。ZKFailoverController 能及时检测到 NameNode 的健康状况，在主 NameNode 故障时借助 Zookeeper 实现自动的主备选举和切换（当然 NameNode 目前也支持不依赖于 Zookeeper 的手动主备切换）；<br>Zookeeper 集群：为主备切换控制器提供主备选举支持；</li>
+<li><strong>共享存储系统</strong>：共享存储系统是实现 NameNode 的高可用最为关键的部分，共享存储系统保存了 NameNode 在运行过程中所产生的 HDFS 的元数据。主 NameNode 和备 NameNode 通过共享存储系统实现元数据同步。在进行主备切换的时候，新的主 NameNode 在确认元数据完全同步之后才能继续对外提供服务。</li>
+<li><strong>DataNode 节点</strong>：因为主 NameNode 和备 NameNode 需要共享 HDFS 的数据块和 DataNode 之间的映射关系，为了使故障切换能够快速进行，DataNode 会同时向主 NameNode 和备 NameNode 上报数据块的位置信息。</li>
 </ul>
 
             </div>
@@ -476,9 +461,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/09/21/hadoop-de-ha/">
                     <div class="card-image">
@@ -497,9 +483,9 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -512,6 +498,7 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -530,20 +517,19 @@ Active NameNode 和 Standby NameNode：两台 NameNode 形成互备，一台处�
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/21/hdfs-fen-bu-shi-wen-jian-xi-tong/">
+                <a href="/2020/09/21/mapreduce-jian-jie/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="HDFS分布式文件系统">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="MapReduce简介">
                         
-                        <span class="card-title">HDFS分布式文件系统</span>
+                        <span class="card-title">MapReduce简介</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            介绍HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。
-HDFS 架构设计及原理HDFS 架构HDFS 遵循主/从架构，由单
+                            概述Hadoop MapReduce 是一个分布式计算框架，用于编写批处理应用程序。编写好的程序可以提交到 Hadoop 集群上用于并行处理大规模的数据集。MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 map 以并行的
                         
                     </div>
                     <div class="publish-info">
