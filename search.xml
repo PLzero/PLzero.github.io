@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>关于HDFS的几个问题</title>
+      <link href="/2020/09/21/guan-yu-hdfs-de-ji-ge-wen-ti/"/>
+      <url>/2020/09/21/guan-yu-hdfs-de-ji-ge-wen-ti/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-关于向hdfs写数据时-假设复制因子为3-向3个节点写数据完成时-是同时发送ack-还是写完一个就发送"><a href="#1-关于向hdfs写数据时-假设复制因子为3-向3个节点写数据完成时-是同时发送ack-还是写完一个就发送" class="headerlink" title="1. 关于向hdfs写数据时,假设复制因子为3,向3个节点写数据完成时,是同时发送ack,还是写完一个就发送?"></a>1. 关于向hdfs写数据时,假设复制因子为3,向3个节点写数据完成时,是同时发送ack,还是写完一个就发送?</h2><p>答:每个DataNode写完一个块后，会返回确认信息。实际上，hdfs write的时候只需要把数据写到缓冲区就可以返回进行下一条写操作了，连写成功第一个节点都不必要，真正计算起来基本上就是 数据大小/网络带宽 + 3 * 网络传输时延了。</p><h2 id="2-为什么不同时向3个DataNode-发送数据"><a href="#2-为什么不同时向3个DataNode-发送数据" class="headerlink" title="2. 为什么不同时向3个DataNode 发送数据?"></a>2. 为什么不同时向3个DataNode 发送数据?</h2><p>答:网络带宽问题</p><h2 id="3-怎么确定数据节点的远近-怎么得到最近的节点了"><a href="#3-怎么确定数据节点的远近-怎么得到最近的节点了" class="headerlink" title="3. 怎么确定数据节点的远近?怎么得到最近的节点了?"></a>3. 怎么确定数据节点的远近?怎么得到最近的节点了?</h2><p>答:节点距离：两个节点到达最近的共同祖先的距离总和<br>在本地网络中，两个节点被称为”彼此近邻”,在海量数据处理中，其主要限制因素是节点之间数据的传输效率——带宽很稀缺。<br>网路拓扑: 根节点为 “<strong>/</strong>“,其子节点为交换机,再其子节点为机架,机架的子节点就是DataNode机器了,知道其信息,就可以算出节点间的距离了。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 大数据 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hadoop </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Spark程序执行流程</title>
       <link href="/2020/09/21/spark-cheng-xu-zhi-xing-liu-cheng/"/>
       <url>/2020/09/21/spark-cheng-xu-zhi-xing-liu-cheng/</url>
