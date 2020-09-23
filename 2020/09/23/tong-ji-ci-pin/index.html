@@ -4,13 +4,13 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Spark中宽依赖和窄依赖, PL">
-    <meta name="description" content="窄依赖df.filter($&#34;col&#34; =!= lit(&#34;value&#34;))
-// map union 等算子
-filter Rdd 分区 map 模拟
-(k1,v1) =&gt; (k1,v1)
-(k2,v2) =&gt; (k2,v2)
-(k3,v3">
+    <meta name="keywords" content="统计词频, PL">
+    <meta name="description" content="简单案例–统计词频
+val str = &#34;A,B,C,A,A,D,C,B&#34;
+
+val line =  str.split(&#34;,&#34;) //分割
+
+val map_line = line.map(e=&gt;(e,1)) // k =&gt; k,valu">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +18,7 @@ filter Rdd 分区 map 模拟
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Spark中宽依赖和窄依赖 | PL</title>
+    <title>统计词频 | PL</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -265,13 +265,13 @@ filter Rdd 分区 map 模拟
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Spark中宽依赖和窄依赖
+                        统计词频
                     </div>
                 </div>
             </div>
@@ -386,6 +386,10 @@ filter Rdd 分区 map 模拟
                                 <span class="chip bg-color">Spark</span>
                             </a>
                         
+                            <a href="/tags/Scala/" target="_blank">
+                                <span class="chip bg-color">Scala</span>
+                            </a>
+                        
                     </div>
                     
                 </div>
@@ -406,7 +410,7 @@ filter Rdd 分区 map 模拟
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-21
+                    2020-09-23
                 </div>
 
                 
@@ -422,23 +426,23 @@ filter Rdd 分区 map 模拟
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="窄依赖"><a href="#窄依赖" class="headerlink" title="窄依赖"></a>窄依赖</h2><pre class=" language-scala"><code class="language-scala">df<span class="token punctuation">.</span>filter<span class="token punctuation">(</span>$<span class="token string">"col"</span> <span class="token operator">=</span><span class="token operator">!=</span> lit<span class="token punctuation">(</span><span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token comment" spellcheck="true">// map union 等算子</span>
-filter Rdd 分区 map 模拟
-<span class="token punctuation">(</span>k1<span class="token punctuation">,</span>v1<span class="token punctuation">)</span> <span class="token keyword">=></span> <span class="token punctuation">(</span>k1<span class="token punctuation">,</span>v1<span class="token punctuation">)</span>
-<span class="token punctuation">(</span>k2<span class="token punctuation">,</span>v2<span class="token punctuation">)</span> <span class="token keyword">=></span> <span class="token punctuation">(</span>k2<span class="token punctuation">,</span>v2<span class="token punctuation">)</span>
-<span class="token punctuation">(</span>k3<span class="token punctuation">,</span>v3<span class="token punctuation">)</span> <span class="token keyword">=></span> <span class="token punctuation">(</span>k3<span class="token punctuation">,</span>v3<span class="token punctuation">)</span></code></pre>
-<p>map和filter算子中，对于父RDD来说，一个分区内的数据，<strong>有且仅有一个</strong>子RDD的分区来消费该数据,<br>故判断窄依赖的依据: 父类分区内的数据，会被子类RDD中的指定的唯一一个分区所消费</p>
-<h2 id="宽依赖"><a href="#宽依赖" class="headerlink" title="宽依赖"></a>宽依赖</h2><pre class=" language-scala"><code class="language-scala">df<span class="token punctuation">.</span>groupBy<span class="token punctuation">(</span><span class="token string">"col1"</span><span class="token punctuation">,</span><span class="token string">"col2"</span><span class="token punctuation">)</span></code></pre>
-<p>只要是shuffle,一定会产生宽依赖;<br>宽依赖，指的是父类一个分区内的数据，会被子RDD内的<strong>多个分区</strong>消费，需要自行判断分区，来实现数据发送的效果.</p>
-<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
-<li><p>每个分区内的数据，是否能够指定自己在子类RDD中的分区？<br>答:如果不能，那就是宽依赖：如果父RDD和子RDD分区数目一致，那基本就是窄依赖了</p>
-</li>
-<li><p>为什么hadoop没有窄依赖?<br>答:map于reduce之间都需要shuffle</p>
-</li>
-<li><p>判断宽窄依赖的根据到底是什么?<br>答: RDD产生的数据流向;父RDD中的一个Partition对子RDD进行数据分发,则为宽依赖,否则称之为窄依赖。即使父RDD的分区只有一条数据，它也走了数据分发的逻辑，只不过按照流程走了一遍，但这无法改变它开启了数据分发的事实。</p>
-</li>
-</ol>
+                <p>简单案例–统计词频</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">val</span> str <span class="token operator">=</span> <span class="token string">"A,B,C,A,A,D,C,B"</span>
+
+<span class="token keyword">val</span> line <span class="token operator">=</span>  str<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//分割</span>
+
+<span class="token keyword">val</span> map_line <span class="token operator">=</span> line<span class="token punctuation">.</span>map<span class="token punctuation">(</span>e<span class="token keyword">=></span><span class="token punctuation">(</span>e<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// k => k,value</span>
+
+<span class="token keyword">val</span> group_line <span class="token operator">=</span>  map_line<span class="token punctuation">.</span>groupBy<span class="token punctuation">(</span>e<span class="token keyword">=></span>e<span class="token punctuation">.</span>_1<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// 按Key分组</span>
+
+<span class="token keyword">val</span> result <span class="token operator">=</span> group_line<span class="token punctuation">.</span>map<span class="token punctuation">(</span>e<span class="token keyword">=></span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>_1<span class="token punctuation">,</span>e<span class="token punctuation">.</span>_2<span class="token punctuation">.</span>size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+result<span class="token punctuation">.</span>foreach<span class="token punctuation">(</span>println<span class="token punctuation">)</span></code></pre>
+<p>结果</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token punctuation">(</span>A<span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span>B<span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span>C<span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span>D<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span></code></pre>
 
             </div>
             <hr/>
@@ -476,9 +480,10 @@ filter Rdd 分区 map 模拟
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/09/23/tong-ji-ci-pin/">
                     <div class="card-image">
@@ -496,9 +501,9 @@ filter Rdd 分区 map 模拟
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-23
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-23
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -511,6 +516,7 @@ filter Rdd 分区 map 模拟
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -533,19 +539,19 @@ filter Rdd 分区 map 模拟
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/21/guan-yu-hdfs-de-ji-ge-wen-ti/">
+                <a href="/2020/09/21/spark-zhong-kuan-yi-lai-he-zhai-yi-lai/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="关于HDFS的几个问题">
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="Spark中宽依赖和窄依赖">
                         
-                        <span class="card-title">关于HDFS的几个问题</span>
+                        <span class="card-title">Spark中宽依赖和窄依赖</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            拓展向HDFS写数据会遇到的几个问题
+                            关于宽依赖和窄依赖定义的问题
                         
                     </div>
                     <div class="publish-info">
@@ -567,8 +573,8 @@ filter Rdd 分区 map 模拟
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Hadoop/" target="_blank">
-                        <span class="chip bg-color">Hadoop</span>
+                    <a href="/tags/Spark/" target="_blank">
+                        <span class="chip bg-color">Spark</span>
                     </a>
                     
                 </div>
