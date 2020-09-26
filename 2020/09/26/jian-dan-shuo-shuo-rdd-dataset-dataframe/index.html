@@ -4,13 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="统计词频, PL">
-    <meta name="description" content="简单案例–统计词频
-val str = &#34;A,B,C,A,A,D,C,B&#34;
-
-val line =  str.split(&#34;,&#34;) //分割
-
-val map_line = line.map(e=&gt;(e,1)) // k =&gt; k,valu">
+    <meta name="keywords" content="简单说说RDD,DataSet,DataFrame, PL">
+    <meta name="description" content="RDD分布式弹性数据集,低级API,Spark最基本的数据抽象
+DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有严格的 Java 虚拟机 (JVM) 语言特性,你可以定义Dataset中每一行">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +14,7 @@ val map_line = line.map(e=&gt;(e,1)) // k =&gt; k,valu">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>统计词频 | PL</title>
+    <title>简单说说RDD,DataSet,DataFrame | PL</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -265,13 +261,13 @@ val map_line = line.map(e=&gt;(e,1)) // k =&gt; k,valu">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        统计词频
+                        简单说说RDD,DataSet,DataFrame
                     </div>
                 </div>
             </div>
@@ -386,23 +382,10 @@ val map_line = line.map(e=&gt;(e,1)) // k =&gt; k,valu">
                                 <span class="chip bg-color">Spark</span>
                             </a>
                         
-                            <a href="/tags/Scala/" target="_blank">
-                                <span class="chip bg-color">Scala</span>
-                            </a>
-                        
                     </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fa fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/大数据/" class="post-category" target="_blank">
-                                大数据
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -410,7 +393,7 @@ val map_line = line.map(e=&gt;(e,1)) // k =&gt; k,valu">
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-23
+                    2020-09-26
                 </div>
 
                 
@@ -426,30 +409,10 @@ val map_line = line.map(e=&gt;(e,1)) // k =&gt; k,valu">
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>简单案例–统计词频</p>
-<pre class=" language-scala"><code class="language-scala"><span class="token keyword">val</span> str <span class="token operator">=</span> <span class="token string">"A,B,C,A,A,D,C,B"</span>
-
-<span class="token keyword">val</span> line <span class="token operator">=</span>  str<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//分割</span>
-
-<span class="token keyword">val</span> map_line <span class="token operator">=</span> line<span class="token punctuation">.</span>map<span class="token punctuation">(</span>e<span class="token keyword">=></span><span class="token punctuation">(</span>e<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// k => k,value</span>
-
-<span class="token keyword">val</span> group_line <span class="token operator">=</span>  map_line<span class="token punctuation">.</span>groupBy<span class="token punctuation">(</span>e<span class="token keyword">=></span>e<span class="token punctuation">.</span>_1<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// 按Key分组</span>
-
-<span class="token keyword">val</span> result <span class="token operator">=</span> group_line<span class="token punctuation">.</span>map<span class="token punctuation">(</span>e<span class="token keyword">=></span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>_1<span class="token punctuation">,</span>e<span class="token punctuation">.</span>_2<span class="token punctuation">.</span>size<span class="token punctuation">)</span><span class="token punctuation">)</span>
-
-result<span class="token punctuation">.</span>foreach<span class="token punctuation">(</span>println<span class="token punctuation">)</span></code></pre>
-<p>结果</p>
-<pre class=" language-scala"><code class="language-scala"><span class="token punctuation">(</span>A<span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span>
-<span class="token punctuation">(</span>B<span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
-<span class="token punctuation">(</span>C<span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
-<span class="token punctuation">(</span>D<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span></code></pre>
-<pre class=" language-scala"><code class="language-scala"><span class="token keyword">val</span> listLine <span class="token operator">=</span> List<span class="token punctuation">(</span><span class="token string">"A B C"</span><span class="token punctuation">,</span><span class="token string">"B C D"</span><span class="token punctuation">,</span><span class="token string">"E C D"</span><span class="token punctuation">,</span><span class="token string">"A C E"</span><span class="token punctuation">)</span>
-<span class="token keyword">val</span> result <span class="token operator">=</span>
-    listLine<span class="token punctuation">.</span>flatMap<span class="token punctuation">(</span>_<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-      <span class="token punctuation">.</span>map<span class="token punctuation">(</span>_<span class="token punctuation">.</span>trim<span class="token punctuation">)</span>
-      <span class="token punctuation">.</span>map<span class="token punctuation">(</span><span class="token punctuation">(</span>_<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-      <span class="token punctuation">.</span>groupBy<span class="token punctuation">(</span>_<span class="token punctuation">.</span>_1<span class="token punctuation">)</span>
-      <span class="token punctuation">.</span>map<span class="token punctuation">(</span>e<span class="token keyword">=></span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>_1<span class="token punctuation">,</span>e<span class="token punctuation">.</span>_2<span class="token punctuation">.</span>size<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+                <h2 id="RDD"><a href="#RDD" class="headerlink" title="RDD"></a>RDD</h2><p><strong>分布式弹性数据集</strong>,低级API,Spark最基本的数据抽象</p>
+<h2 id="DataSet"><a href="#DataSet" class="headerlink" title="DataSet"></a>DataSet</h2><p>具有<strong>Typed</strong>类型,Dataset是结构化 API 的基本类型,Dataset具有严格的 Java 虚拟机 (JVM) 语言特性,你可以定义Dataset中每一行所包含的对象。在Scala 中就是一个case类对象，它实质上定义了一种模式schema，而在Java中就是Java Bean。在编译时检查类型。</p>
+<h2 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h2><p>具有<strong>UnTyped</strong>类型,是Row类型的Dataset,Row类型就是Spark内部的有明确 Scheme 结构，即列名、列字段类型,Row 是 Spark 中定义的一个 trait，其子类中封装了列字段的信息,在编译时检查类型。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>DataSets、DataFrames、SQL 的底层都依赖了 RDDs API，并对外提供结构化的访问接口。</p>
 
             </div>
             <hr/>
@@ -487,9 +450,10 @@ result<span class="token punctuation">.</span>foreach<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/09/26/jian-dan-shuo-shuo-rdd-dataset-dataframe/">
                     <div class="card-image">
@@ -507,9 +471,9 @@ result<span class="token punctuation">.</span>foreach<span class="token punctuat
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-26
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-26
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-user fa-fw"></i>
@@ -518,6 +482,7 @@ result<span class="token punctuation">.</span>foreach<span class="token punctuat
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -536,24 +501,24 @@ result<span class="token punctuation">.</span>foreach<span class="token punctuat
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/21/spark-zhong-kuan-yi-lai-he-zhai-yi-lai/">
+                <a href="/2020/09/23/tong-ji-ci-pin/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="Spark中宽依赖和窄依赖">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="统计词频">
                         
-                        <span class="card-title">Spark中宽依赖和窄依赖</span>
+                        <span class="card-title">统计词频</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            关于宽依赖和窄依赖定义的问题
+                            统计词频简单学习
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-21
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-23
                             </span>
                         <span class="publish-author">
                             
@@ -572,6 +537,10 @@ result<span class="token punctuation">.</span>foreach<span class="token punctuat
                     
                     <a href="/tags/Spark/" target="_blank">
                         <span class="chip bg-color">Spark</span>
+                    </a>
+                    
+                    <a href="/tags/Scala/" target="_blank">
+                        <span class="chip bg-color">Scala</span>
                     </a>
                     
                 </div>
