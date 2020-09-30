@@ -4,9 +4,11 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="简单说说RDD,DataSet,DataFrame, PL">
-    <meta name="description" content="RDD分布式弹性数据集,低级API,Spark最基本的数据抽象
-DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有严格的 Java 虚拟机 (JVM) 语言特性,你可以定义Dataset中每一行">
+    <meta name="keywords" content="SQL排名, PL">
+    <meta name="description" content="MySQL8 窗口函数SELECT 
+id,num,
+rank() over (ORDER BY num desc) as 并列跳跃排名,-- 并列跳跃排名
+dense_rank() over (ORDER BY num desc) as ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -14,7 +16,7 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>简单说说RDD,DataSet,DataFrame | PL</title>
+    <title>SQL排名 | PL</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -261,13 +263,13 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        简单说说RDD,DataSet,DataFrame
+                        SQL排名
                     </div>
                 </div>
             </div>
@@ -378,8 +380,8 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Spark/" target="_blank">
-                                <span class="chip bg-color">Spark</span>
+                            <a href="/tags/SQL/" target="_blank">
+                                <span class="chip bg-color">SQL</span>
                             </a>
                         
                     </div>
@@ -387,13 +389,22 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
                 </div>
                 <div class="col s5 right-align">
                     
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/数据库/" class="post-category" target="_blank">
+                                数据库
+                            </a>
+                        
+                    </div>
+                    
                 </div>
             </div>
 
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-26
+                    2020-09-30
                 </div>
 
                 
@@ -409,10 +420,47 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="RDD"><a href="#RDD" class="headerlink" title="RDD"></a>RDD</h2><p><strong>分布式弹性数据集</strong>,低级API,Spark最基本的数据抽象</p>
-<h2 id="DataSet"><a href="#DataSet" class="headerlink" title="DataSet"></a>DataSet</h2><p>具有<strong>Typed</strong>类型,Dataset是结构化 API 的基本类型,Dataset具有严格的 Java 虚拟机 (JVM) 语言特性,你可以定义Dataset中每一行所包含的对象。在Scala 中就是一个case类对象，它实质上定义了一种模式schema，而在Java中就是Java Bean。在编译时检查类型。</p>
-<h2 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h2><p>具有<strong>UnTyped</strong>类型,是Row类型的Dataset,Row类型就是Spark内部的有明确 Scheme 结构，即列名、列字段类型,Row 是 Spark 中定义的一个 trait，其子类中封装了列字段的信息,在运行时检查类型。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>DataSets、DataFrames、SQL 的底层都依赖了 RDDs API，并对外提供结构化的访问接口。</p>
+                <h2 id="MySQL8-窗口函数"><a href="#MySQL8-窗口函数" class="headerlink" title="MySQL8 窗口函数"></a>MySQL8 窗口函数</h2><pre class=" language-sql"><code class="language-sql"><span class="token keyword">SELECT</span> 
+id<span class="token punctuation">,</span>num<span class="token punctuation">,</span>
+rank<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">over</span> <span class="token punctuation">(</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> num <span class="token keyword">desc</span><span class="token punctuation">)</span> <span class="token keyword">as</span> 并列跳跃排名<span class="token punctuation">,</span><span class="token comment" spellcheck="true">-- 并列跳跃排名</span>
+dense_rank<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">over</span> <span class="token punctuation">(</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> num <span class="token keyword">desc</span><span class="token punctuation">)</span> <span class="token keyword">as</span> 并列连续排名<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">-- 并列连续排名</span>
+row_number<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">over</span> <span class="token punctuation">(</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> num <span class="token keyword">desc</span><span class="token punctuation">)</span> <span class="token keyword">as</span> 连续排名 <span class="token comment" spellcheck="true">-- 连续排名</span>
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span>test<span class="token punctuation">`</span><span class="token punctuation">;</span></code></pre>
+<h2 id="原生SQL实现"><a href="#原生SQL实现" class="headerlink" title="原生SQL实现"></a>原生SQL实现</h2><p>将需要排名的列按照需求进行排序,如果需要最大的为第一名,则进行降序, 用<strong>变量</strong>逐行扫描递增</p>
+<pre class=" language-sql"><code class="language-sql"><span class="token keyword">SELECT</span> 
+id<span class="token punctuation">,</span>num<span class="token punctuation">,</span>
+<span class="token punctuation">(</span><span class="token variable">@rank</span> :<span class="token operator">=</span> <span class="token variable">@rank</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token string">'排名'</span>
+<span class="token keyword">FROM</span> test <span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token keyword">SELECT</span> <span class="token variable">@rank</span> :<span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span> r
+<span class="token keyword">ORDER</span> <span class="token keyword">BY</span> num <span class="token keyword">desc</span><span class="token punctuation">;</span></code></pre>
+<hr>
+<p>自连表</p>
+<pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true">-- 并列连续排名,按分数从高到低排列</span>
+<span class="token keyword">SELECT</span>
+<span class="token number">a</span><span class="token punctuation">.</span>Score  <span class="token punctuation">,</span>
+<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">DISTINCT</span> <span class="token number">b</span><span class="token punctuation">.</span>Score <span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token string">'Rank'</span>
+<span class="token keyword">from</span> Scores  <span class="token number">a</span> <span class="token punctuation">,</span>Scores  <span class="token number">b</span>
+<span class="token keyword">WHERE</span> <span class="token number">a</span><span class="token punctuation">.</span>Score  <span class="token operator">&lt;=</span> <span class="token number">b</span><span class="token punctuation">.</span>Score
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> <span class="token number">a</span><span class="token punctuation">.</span>Score 
+<span class="token keyword">ORDER</span> <span class="token keyword">BY</span> Score <span class="token keyword">desc</span>
+
+<span class="token comment" spellcheck="true">-- 分解</span>
+<span class="token number">1</span><span class="token punctuation">.</span> <span class="token keyword">SELECT</span> <span class="token number">a</span><span class="token punctuation">.</span><span class="token operator">*</span><span class="token punctuation">,</span><span class="token number">b</span><span class="token punctuation">.</span><span class="token operator">*</span>
+<span class="token keyword">from</span> Scores  <span class="token number">a</span> <span class="token punctuation">,</span>Scores  <span class="token number">b</span>
+<span class="token keyword">WHERE</span> <span class="token number">a</span><span class="token punctuation">.</span>Score  <span class="token operator">&lt;=</span> <span class="token number">b</span><span class="token punctuation">.</span>Score  <span class="token comment" spellcheck="true">-- 对 a表的记录 从 b表 的第一行 开始匹配(直到 a表 扫描完成,开始 匹配 b表的第二行...N),就是相当于 b表 时 外循环 ,a表 是内循环</span>
+
+<span class="token number">2</span><span class="token punctuation">.</span> <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> <span class="token number">a</span><span class="token punctuation">.</span>Score 
+<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">DISTINCT</span> <span class="token number">b</span><span class="token punctuation">.</span>Score <span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token string">'Rank'</span> <span class="token comment" spellcheck="true">-- 以 a表 的分数为分组, 统计 b表 种 分数 比 a表 大于或等于的条数 </span>
+
+不好理解的话
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> <span class="token number">b</span><span class="token punctuation">.</span>Score 
+<span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">DISTINCT</span> <span class="token number">a</span><span class="token punctuation">.</span>Score <span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token string">'Rank'</span> <span class="token comment" spellcheck="true">-- 以 b表 的分数为分组,b表 经过上述where过滤后, 相同的值 已经分好组了,因为是外循环, 只需要找到 在 a表 种 比 b表分数小的 总个数即可</span>
+<span class="token comment" spellcheck="true">-- 这样 求出来的排名 是 最大 对应着 大排名</span>
+
+<span class="token comment" spellcheck="true">-- 如果两个分数相同，则两个分数排名（Rank）相同</span>
+<span class="token keyword">SELECT</span> <span class="token number">a</span><span class="token punctuation">.</span>Score <span class="token punctuation">,</span>
+<span class="token punctuation">(</span><span class="token keyword">SELECT</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">DISTINCT</span> Score<span class="token punctuation">)</span> <span class="token keyword">FROM</span> Scores <span class="token keyword">WHERE</span> <span class="token number">a</span><span class="token punctuation">.</span>Score <span class="token operator">&lt;=</span> Score<span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token string">'Rank'</span>
+<span class="token keyword">FROM</span> Scores <span class="token keyword">as</span> <span class="token number">a</span>
+<span class="token keyword">ORDER</span> <span class="token keyword">BY</span> Score <span class="token keyword">desc</span></code></pre>
 
             </div>
             <hr/>
@@ -450,9 +498,10 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/09/30/sql-pai-ming/">
                     <div class="card-image">
@@ -470,9 +519,9 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-30
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-30
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -485,6 +534,7 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -503,33 +553,29 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/23/tong-ji-ci-pin/">
+                <a href="/2020/09/26/jian-dan-shuo-shuo-rdd-dataset-dataframe/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="统计词频">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="简单说说RDD,DataSet,DataFrame">
                         
-                        <span class="card-title">统计词频</span>
+                        <span class="card-title">简单说说RDD,DataSet,DataFrame</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            统计词频简单学习
+                            RDD,DataSet,DataFrame三者之间的区别
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-23
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-26
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fa fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/大数据/" class="post-category" target="_blank">
-                                    大数据
-                                </a>
-                            
+                            <i class="fa fa-user fa-fw"></i>
+                            PC
                             
                         </span>
                     </div>
@@ -539,10 +585,6 @@ DataSet具有Typed类型,Dataset是结构化 API 的基本类型,Dataset具有�
                     
                     <a href="/tags/Spark/" target="_blank">
                         <span class="chip bg-color">Spark</span>
-                    </a>
-                    
-                    <a href="/tags/Scala/" target="_blank">
-                        <span class="chip bg-color">Scala</span>
                     </a>
                     
                 </div>
