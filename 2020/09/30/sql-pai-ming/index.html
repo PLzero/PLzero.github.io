@@ -531,6 +531,28 @@ id<span class="token punctuation">,</span>num<span class="token punctuation">,</
 <span class="token comment" spellcheck="true">-- 在部门相同的情况下.选定外部表的工资与内部表的工资做对大小比较,</span>
 <span class="token comment" spellcheck="true">-- 若 在内部表中找到 比 外部表大 的 记录,则进行统计,这个值(RN)就是这个部门的第RN大</span>
 <span class="token comment" spellcheck="true">-- 接着过滤 前 n 个 ,就是 每个部门 前 n 的工资</span></code></pre>
+<pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true">-- 解法2 利用窗口函数</span>
+<span class="token keyword">SELECT</span>
+    <span class="token number">d</span><span class="token punctuation">.</span> NAME <span class="token keyword">AS</span> Department<span class="token punctuation">,</span>
+    <span class="token number">e</span><span class="token punctuation">.</span> NAME <span class="token keyword">AS</span> Employee<span class="token punctuation">,</span>
+    Salary
+<span class="token keyword">FROM</span>
+    Employee <span class="token number">e</span><span class="token punctuation">,</span>
+    Department <span class="token number">d</span><span class="token punctuation">,</span>
+    <span class="token punctuation">(</span>
+        <span class="token keyword">SELECT</span>
+            Id<span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">-- 唯一</span>
+            dense_rank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token keyword">over</span><span class="token punctuation">(</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> DepartmentId <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> Salary <span class="token keyword">DESC</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> r <span class="token comment" spellcheck="true">-- 先根据 DepartmentId 部门分组 对 Salary 工资 排序 获取 排名</span>
+        <span class="token keyword">FROM</span>
+            Employee
+    <span class="token punctuation">)</span> <span class="token keyword">AS</span> n
+<span class="token keyword">WHERE</span>
+    n<span class="token punctuation">.</span>Id <span class="token operator">=</span> <span class="token number">e</span><span class="token punctuation">.</span>Id
+<span class="token operator">AND</span> <span class="token number">e</span><span class="token punctuation">.</span>DepartmentId <span class="token operator">=</span> <span class="token number">d</span><span class="token punctuation">.</span>Id
+<span class="token operator">AND</span> r <span class="token operator">&lt;</span> <span class="token number">4</span>  <span class="token comment" spellcheck="true">-- 找到前三的</span>
+<span class="token keyword">ORDER</span> <span class="token keyword">BY</span>
+    <span class="token number">d</span><span class="token punctuation">.</span> NAME<span class="token punctuation">,</span>
+    Salary <span class="token keyword">DESC</span></code></pre>
 
             </div>
             <hr/>
